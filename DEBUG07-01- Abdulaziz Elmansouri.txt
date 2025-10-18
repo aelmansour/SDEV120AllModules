@@ -1,0 +1,88 @@
+// Each time a salesperson sells a car at the
+// Pardeeville New and Used Auto Dealership,
+// a record is created containing the salesperson’s
+// name and the amount of the sale.
+// Sales of new and used cars are kept in separate files,
+// sorted by salesperson ID number.
+// Management has requested a merged file so that
+// all of a salesperson’s sales (both new and used cars)
+// are displayed together. The following code is intended
+// to merge the files.
+start
+   Declarations
+      string newSalesperson
+      num newAmount
+      string usedSalesperson
+      num usedAmount
+      string bothAtEof = False
+      string HIGH_NAME = "ZZZZZ"
+      InputFile newSales
+      InputFile usedSales
+      OutputFile allsales
+   getReady()
+   while bothAtEof = True
+      detailLoop()
+   endwhile
+   finish()
+stop 
+
+def getReady():
+    global newSales, usedSales, allSales
+    global newSalesperson, newAmount, usedSalesperson, usedAmount, bothAtEof	
+
+    newSales = open("NewSales.dat", "r")
+    usedSales = open("UsedSales.dat", "r")
+    allSales = open("AllSales.dat", "w")
+
+    newSalesperson, newAmount = readRecord(newSales)
+    usedSalesperson, usedAmount = readRecord(usedSales)
+
+    if newSalesperson is None and usedSalesperson is None:
+        bothAtEof = True
+    else:
+        bothAtEof = False
+
+    return
+
+
+def readRecord(file):
+    line = file.readline()
+    if not line:
+        return None, None
+    parts = line.strip().split(",")
+    return parts[0], float(parts[1])
+
+
+def detailLoop():
+    global newSalesperson, newAmount, usedSalesperson, usedAmount, bothAtEof
+    HIGH_NAME = "ZZZZZ"
+
+    if newSalesperson is None and usedSalesperson is None:
+        bothAtEof = True
+        return
+
+    if usedSalesperson is None or (newSalesperson is not None and newSalesperson < usedSalesperson):
+        allSales.write(f"{newSalesperson},{newAmount}\n")
+        newSalesperson, newAmount = readRecord(newSales)
+    else:
+        allSales.write(f"{usedSalesperson},{usedAmount}\n")
+        usedSalesperson, usedAmount = readRecord(usedSales)
+
+    if newSalesperson is None and usedSalesperson is None:
+        bothAtEof = True
+
+    return
+
+
+def finish():
+    newSales.close()
+    usedSales.close()
+    allSales.close()
+    return
+
+getReady()
+
+while not bothAtEof:
+    detailLoop()
+
+finish()
