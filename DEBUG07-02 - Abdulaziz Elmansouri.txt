@@ -1,0 +1,92 @@
+// The two senior class homerooms at Littleville High School
+// are having a fundraising drive for the prom. Each time a student
+// solicits a contribution, a record is created with the
+// student's name and the value. Two files have been created for
+// Homeroom A and Homeroom B. Each file is sorted in contribution
+// value order from highest to lowest. This program merges the two files.
+start
+   Declarations
+      string roomAName
+      num roomAValue
+      string roomBName
+      num roomBValue
+      string bothFilesDone = "N"
+      num HIGH_VALUE = 999999
+      InputFile roomAFile
+      InputFile roomBFile
+      InputFile mergedFile
+   getReady()
+   while bothFilesDone = "N"
+      detailLoop()
+   endwhile
+   checkBoth()
+   allDone()
+stop
+
+def getReady(): 
+   global roomAFile, roomBFile, mergedFile
+   global roomAName, roomAValue, roomBName, roomBValue, bothFilesDone, HIGH_VALUE
+
+   HIGH_VALUE = float('inf')
+   bothFilesDone = False
+
+   roomAFile = open("roomAFile.dat", "r")
+   roomBFile = open("roomBFile.dat", "r")
+   mergedFile = open("mergedFile.dat", "w")
+
+   readA()
+   readB()
+   checkBoth()
+   return
+
+def readA():
+   global roomAName, roomAValue
+   line = roomAFile.readline()
+   if not line:
+      roomAName = ""
+      roomAValue = HIGH_VALUE
+
+   else:
+      parts = line.strip().split(",")
+      roomAName = parts[0]
+      roomAValue = float(parts[1])
+      return
+
+def readB():
+   global roomBName, roomBValue
+   line = roomBFile.readline()
+   if not line:
+      roomBName = ""
+      roomBValue = HIGH_VALUE
+
+   else:
+      parts = line.strip().split(",")
+      roomBName = parts[0]
+      roomBValue = float(parts[1])
+      return
+
+def checkBoth():
+   global bothFilesDone
+   if roomAValue == HIGH_VALUE and roomBValue == HIGH_VALUE:
+      bothFilesDone = True
+      return
+
+def detailLoop():
+   global bothFilesDone, roomAValue, roomBValue
+   if roomAValue == HIGH_VALUE and roomBValue == HIGH_VALUE:
+       bothFilesDone = True
+       return
+
+if rommAValue <= roomBValue:
+    mergedFile.write(f"{roomAName},{roomAValue}\n")
+    readA()
+else:
+    mergedFile.write(f"{roomBName},{roomBValye}\n")
+    readB()
+    checkBoth()
+ 
+def allDone():
+   roomAFile.close()
+   roomBFile.close()
+   mergedFile.close()
+   return 
